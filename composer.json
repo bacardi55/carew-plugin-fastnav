@@ -1,0 +1,27 @@
+{
+    "name"        : "carew/carew-plugin-fastnav",
+    "description" : "FastNav plugin for carew",
+    "license"     : "MIT",
+    "homepage"    : "http://github.com/bacardi55/carew-plugin-fastnav",
+    "keywords"    : ["carew", "plugin", "fastnav"],
+    "authors"     : [
+        {
+            "name"     : "Raphaël Khaïat",
+            "email"    : "raphael@khaiat.org",
+            "homepage" : "https://bacardi55.org"
+        }
+    ],
+    "require": {
+        "carew/carew"    : "~1.6",
+        "easybook/geshi" : "dev-master@dev"
+    },
+    "autoload": {
+        "psr-0": { "Carew\\Plugin\\Highlight": ""}
+    },
+    "target-dir": "Carew/Plugin/Highlight",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    }
+}
