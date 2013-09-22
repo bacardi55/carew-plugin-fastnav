@@ -9,8 +9,11 @@ use Twig_Environment;
 
 class FastNavEventSubscriber implements EventSubscriberInterface
 {
-    public function __construct()
-    {
+    protected $url_absolute;
+
+    public function __construct($config) {
+        $this->url_absolute = isset($config['site']['url_absolute']) ?
+            $config['site']['url_absolute'] : '';
     }
 
     public function onDocuments($event)
@@ -29,6 +32,10 @@ class FastNavEventSubscriber implements EventSubscriberInterface
 
     protected function addFastNav($documents)
     {
+        $documents = array_filter($documents, function($document) {
+            return ($document->getType() == Document::TYPE_POST);
+        });
+
         $keys = array_keys($documents);
         sort($keys);
 
@@ -38,19 +45,20 @@ class FastNavEventSubscriber implements EventSubscriberInterface
 
           if (isset($keys[$i - 1])) {
             $prev = array(
-              'link' => '/' . $keys[$i - 1],
+              'link' => $this->url_absolute . '/' . $documents[$keys[$i - 1]]->getPath(),
               'title' => $documents[$keys[$i - 1]]->getTitle(),
             );
           }
           if (isset($keys[$i + 1])) {
             $next = array(
-              'link' => '/' . $keys[$i + 1],
+              'link' => $this->url_absolute . '/' . $documents[$keys[$i + 1]]->getPath(),
               'title' => $documents[$keys[$i + 1]]->getTitle(),
             );
           }
 
           $fastNav = array('next' => $next, 'prev' => $prev);
-          $documents[$keys[$i]]->setMetadatas(array('fastNav' => $fastNav), true);
+
+          $documents[$keys[$i]]->addMetadatas(array('fastNav' => $fastNav), true);
         }
     }
 }
