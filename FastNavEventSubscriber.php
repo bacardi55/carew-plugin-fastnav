@@ -11,7 +11,8 @@ class FastNavEventSubscriber implements EventSubscriberInterface
 {
     protected $url_absolute;
 
-    public function __construct($config) {
+    public function __construct($config)
+    {
         $this->url_absolute = isset($config['site']['url_absolute']) ?
             $config['site']['url_absolute'] : '';
     }
@@ -41,24 +42,28 @@ class FastNavEventSubscriber implements EventSubscriberInterface
 
         $nbDocs = count($keys);
         for ($i = 0; $i < $nbDocs; ++$i) {
-          $prev = $next = array('link' => NULL, 'title' => NULL);
+            $prev = $next = array('link' => null, 'title' => null);
 
-          if (isset($keys[$i - 1])) {
-            $prev = array(
-              'link' => $this->url_absolute . '/' . $documents[$keys[$i - 1]]->getPath(),
-              'title' => $documents[$keys[$i - 1]]->getTitle(),
+            if (isset($keys[$i - 1])) {
+                $prev = array(
+                    'link' => $this->url_absolute
+                        . '/' . $documents[$keys[$i - 1]]->getPath(),
+                    'title' => $documents[$keys[$i - 1]]->getTitle(),
+                );
+            }
+            if (isset($keys[$i + 1])) {
+                $next = array(
+                    'link' => $this->url_absolute
+                        . '/' . $documents[$keys[$i + 1]]->getPath(),
+                    'title' => $documents[$keys[$i + 1]]->getTitle(),
+                );
+            }
+
+            $fastNav = array('next' => $next, 'prev' => $prev);
+
+            $documents[$keys[$i]]->addMetadatas(
+                array('fastNav' => $fastNav), true
             );
-          }
-          if (isset($keys[$i + 1])) {
-            $next = array(
-              'link' => $this->url_absolute . '/' . $documents[$keys[$i + 1]]->getPath(),
-              'title' => $documents[$keys[$i + 1]]->getTitle(),
-            );
-          }
-
-          $fastNav = array('next' => $next, 'prev' => $prev);
-
-          $documents[$keys[$i]]->addMetadatas(array('fastNav' => $fastNav), true);
         }
     }
 }
